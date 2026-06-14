@@ -15,9 +15,9 @@ DROP TABLE IF EXISTS Users;
 -- =========================================================================
 CREATE TABLE Users (
   user_id serial PRIMARY KEY,
-  full_name varchar(250),
-  email varchar(250) UNIQUE,
-  role text CHECK (role IN ('Ticket Manager', 'Football Fan')),
+  full_name varchar(250) NOT NULL,
+  email varchar(250) UNIQUE NOT NULL,
+  role text CHECK (role IN ('Ticket Manager', 'Football Fan')) NOT NULL,
   phone_number varchar(20)
 );
 
@@ -25,11 +25,11 @@ CREATE TABLE Users (
 -- 2. CREATE MATCHES TABLE
 -- =========================================================================
 CREATE TABLE Matches (
-  match_id int PRIMARY KEY,
-  fixture text,
-  tournament_category varchar(250),
-  base_ticket_price decimal(10, 2) CHECK (base_ticket_price >= 0),
-  match_status varchar(50) CHECK (
+  match_id serial PRIMARY KEY,
+  fixture text NOT NULL,
+  tournament_category varchar(250) NOT NULL,
+  base_ticket_price decimal(10, 2) CHECK (base_ticket_price >= 0) NOT NULL,
+  match_status varchar(50) NOT NULL CHECK (
     match_status IN (
       'Available',
       'Selling Fast',
@@ -44,13 +44,13 @@ CREATE TABLE Matches (
 -- =========================================================================
 CREATE TABLE Bookings (
   booking_id serial PRIMARY KEY,
-  user_id int REFERENCES users (user_id),
-  match_id int REFERENCES matches (match_id),
+  user_id int REFERENCES users (user_id) NOT NULL,
+  match_id int REFERENCES matches (match_id) NOT NULL,
   seat_number varchar(50),
   payment_status varchar(50) CHECK (
     payment_status IN ('Pending', 'Confirmed', 'Cancelled', 'Refunded')
   ),
-  total_cost decimal(10, 2) CHECK (total_cost >= 0)
+  total_cost decimal(10, 2) NOT NULL CHECK (total_cost >= 0)
 );
 
 
